@@ -11,8 +11,7 @@ A boundary foi definida elevando o fetch de dados para Server Components (otimiz
 **10k Itens**: Usaria `FlashList` (Shopify) para reciclagem massiva de View. Trocaria imagens padrões por `expo-image` e limitaria carga de vídeos ativados só em "viewableItems" no intersect. Faria o fetch iterativo (Lazy pagination).
 
 ## 3. Trade-off do Sync (máx 5 linhas)
-
-<!-- A resolução de conflito que implementei tem uma fraqueza: [descreva]. Se tivesse mais tempo, eu: [descreva]. -->
+Optamos por processamento estritamente **FIFO** para preservar transações dependentes (ex: atualizar corretor responsável antes de adicionar uma nota). O risco é o travamento em funil (*head-of-line blocking*), paralisando toda a rede caso a 1ª requisição retarde perpetuamente. Em cenário real, mitigaria introduzindo **Filas Paralelas por Domínio/Entidade** (onde operações de chaves diferentes não bloqueiam as vizinhas) ou definindo *Dead Letter Queues* para remover requisições tóxicas da fila prioritária de vez.
 
 ## 4. O bug mais difícil (máx 3 linhas)
 
