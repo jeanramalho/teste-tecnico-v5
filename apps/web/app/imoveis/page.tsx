@@ -1,6 +1,7 @@
 // apps/web/app/imoveis/page.tsx
 import { fetchProperties } from "../../lib/api";
 import { PropertyList } from "./components/PropertyList";
+import { SearchFilters } from "./components/SearchFilters";
 
 interface PageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -22,7 +23,7 @@ export default async function ImoveisPage({ searchParams }: PageProps) {
     <div>
       <h1 style={{ fontSize: 32, fontWeight: 700, marginBottom: 24 }}>Imóveis</h1>
 
-      {/* TODO: SearchFilters vai aqui (Módulo 3) */}
+      <SearchFilters />
 
       <PropertyList properties={properties} />
     </div>
