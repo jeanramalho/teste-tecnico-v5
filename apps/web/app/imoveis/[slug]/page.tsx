@@ -1,28 +1,17 @@
 // apps/web/app/imoveis/[slug]/page.tsx
-// ⚠️ MÓDULO 2B: Refatore as boundaries server/client
-"use client";
-
-import { useEffect, useState } from "react";
 import { GalleryClient } from "./components/GalleryClient";
 import { PriceCalculator } from "./components/PriceCalculator";
 import { ContactForm } from "./components/ContactForm";
-import type { Property } from "@repo/shared/domain/Property";
+import { fetchPropertyBySlug } from "../../../lib/api";
 
-export default function PropertyPage({ params }: { params: { slug: string } }) {
-  const [property, setProperty] = useState<Property | null>(null);
-  const [loading, setLoading] = useState(true);
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
 
-  useEffect(() => {
-    fetch(`/api/properties/${params.slug}`)
-      .then((r) => r.json())
-      .then((data) => {
-        setProperty(data);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  }, [params.slug]);
+export default async function PropertyPage({ params }: PageProps) {
+  const { slug } = await params;
+  const property = await fetchPropertyBySlug(slug);
 
-  if (loading) return <p>Carregando...</p>;
   if (!property) return <p>Imóvel não encontrado</p>;
 
   return (

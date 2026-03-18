@@ -5,8 +5,7 @@
 
 ## 1. Boundary Server/Client (máx 3 linhas)
 
-<!-- Por que a boundary server/client está onde você colocou? O que é servidor e o que é cliente, e por quê? -->
-
+A boundary foi definida elevando o fetch de dados para Server Components (otimizando SEO, Performance e reduzindo o peso do JS), enquanto interações de estado local (galeria, favoritos e calculadora) foram mantidas em Client Components separados.
 ## 2. Próximos passos de performance RN (máx 5 linhas)
 
 <!-- Se este app tivesse 10.000 itens com imagens, vídeos inline e seções colapsáveis, quais seriam suas 3 primeiras ações para garantir 60fps? NÃO repita o que já fez (memo, selector, Reanimated). Queremos o PRÓXIMO nível. -->

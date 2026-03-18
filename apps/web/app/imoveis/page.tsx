@@ -1,37 +1,22 @@
 // apps/web/app/imoveis/page.tsx
-// ⚠️ MÓDULO 2A: Refatore para Server Component
-"use client";
+import { fetchProperties } from "../../lib/api";
+import { PropertyList } from "./components/PropertyList";
 
-import { useEffect, useState } from "react";
-import { PropertyCard } from "./components/PropertyCard";
-import type { PropertySummary } from "@repo/shared/domain/Property";
+interface PageProps {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
 
-export default function ImoveisPage() {
-  const [properties, setProperties] = useState<PropertySummary[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [favorites, setFavorites] = useState<Set<string>>(new Set());
+export default async function ImoveisPage({ searchParams }: PageProps) {
+  const params = await searchParams;
+  
+  const filters: any = {};
+  if (params.neighborhood) filters.neighborhoods = String(params.neighborhood).split(",");
+  if (params.price_min) filters.priceMin = Number(params.price_min);
+  if (params.price_max) filters.priceMax = Number(params.price_max);
+  if (params.suites_min) filters.suitesMin = Number(params.suites_min);
+  if (params.area_min) filters.areaMin = Number(params.area_min);
 
-  // BUG: Deveria ser Server Component com fetch direto
-  useEffect(() => {
-    fetch("/api/properties")
-      .then((r) => r.json())
-      .then((data) => {
-        setProperties(data);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  }, []);
-
-  const toggleFavorite = (id: string) => {
-    setFavorites((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  };
-
-  if (loading) return <p>Carregando...</p>;
+  const properties = await fetchProperties(filters);
 
   return (
     <div>
@@ -39,16 +24,7 @@ export default function ImoveisPage() {
 
       {/* TODO: SearchFilters vai aqui (Módulo 3) */}
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }}>
-        {properties.map((prop) => (
-          <PropertyCard
-            key={prop.id}
-            property={prop}
-            onFavorite={toggleFavorite}
-            isFavorited={favorites.has(prop.id)}
-          />
-        ))}
-      </div>
+      <PropertyList properties={properties} />
     </div>
   );
 }
