@@ -7,8 +7,8 @@
 
 A boundary foi definida elevando o fetch de dados para Server Components (otimizando SEO, Performance e reduzindo o peso do JS), enquanto interações de estado local (galeria, favoritos e calculadora) foram mantidas em Client Components separados.
 ## 2. Próximos passos de performance RN (máx 5 linhas)
-
-<!-- Se este app tivesse 10.000 itens com imagens, vídeos inline e seções colapsáveis, quais seriam suas 3 primeiras ações para garantir 60fps? NÃO repita o que já fez (memo, selector, Reanimated). Queremos o PRÓXIMO nível. -->
+**Análise**: `PropertyListItem` usa `React.memo`/`useCallback` para barrar re-renders de dependências estáveis. `propertyStore` faz cache manual no selector para estabilizar a matriz devolvida. `AnimatedHeader` usa *Reanimated* para enviar animações nativamente para a UI Thread. Sem memo e cache no store, o teste contabilizaria atualizações repetidas e re-renders em todos os **5** filhos simultaneamente, esgotando recursos toda vez que a store fosse mudada.
+**10k Itens**: Usaria `FlashList` (Shopify) para reciclagem massiva de View. Trocaria imagens padrões por `expo-image` e limitaria carga de vídeos ativados só em "viewableItems" no intersect. Faria o fetch iterativo (Lazy pagination).
 
 ## 3. Trade-off do Sync (máx 5 linhas)
 
