@@ -7,3 +7,5 @@ dist/
 .env.local
 coverage/
 CORRECTION_GUIDE.md
+.gemini
+timeline.md
